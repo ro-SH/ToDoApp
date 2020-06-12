@@ -1,11 +1,69 @@
 <!DOCTYPE html>
+
+{% load static %}
+
 <html lang="en">
 <head>
+    <title>ToDoApp</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToDoApp</title>
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-    <h2>Testing!</h2>
+    <nav>
+        <div class="container nav-wrapper">
+            <a href="/" class="brand-logo">ToDoApp</a>
+            <ul id="nav-mobile" class="right">
+                <li><a href="/">Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Simple ToDoApp with pretty design</h1>
+
+        <div class="row">
+            <div class="col s4">
+                <h4>ADD NEW TASK</h4>
+            </div>
+            <div class="col s4">
+                <h4>SEARCH</42>
+            </div>
+            <div class="col s4">
+                <h4>SHOW BY DAY</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for category in category_list %}
+                <div class="col s4">
+                    <ul class="collection with-header">
+                        <li class="collection-header"><h4>{{ category }}</h4></li>
+                        {% for task in category.tasks_set.all %}
+                            {% if task.is_done %}
+                                <li class="collection-item">
+                                <label>
+                                    <input type="checkbox" checked="checked" disabled="disabled" />
+                                    <span>{{ task }}{{ task.deadline }}</span>
+                                </label>
+                                </li>
+                            {% else %}
+                                <li class="collection-item">
+                                    <label>
+                                        <input type="checkbox" disabled="disabled" />
+                                        <span>{{ task }} {{ task.deadline }}</span>
+                                    </label>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

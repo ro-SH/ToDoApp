@@ -23,7 +23,6 @@ def add_todo(request):
         date = request.POST.get('date')
         time = request.POST.get('time')
         formatted_date = datetime.strptime(date + ' ' + time, DATETIME_FORMAT)
-        is_done = False
     except (KeyError, Categories.DoesNotExist):
         context['error_message'] = "You did not select a category."
         return render(request, 'my_app/index.html', context)
@@ -38,3 +37,13 @@ def add_todo(request):
 def delete_todo(request, task_id):
     Tasks.objects.get(id=task_id).delete()
     return HttpResponseRedirect('/')
+
+def new_search(request):
+    search = request.POST.get('search_field')
+    tasks_list = Tasks.objects.filter(title__contains=search)
+
+    context = {
+        'search': search,
+        'tasks_list': tasks_list,
+    }
+    return render(request, 'my_app/new_search.html', context)

@@ -36,5 +36,5 @@ def add_todo(request):
 
 
 def delete_todo(request, task_id):
-    print(task_id)
+    Tasks.objects.get(id=task_id).delete()
     return HttpResponseRedirect('/')

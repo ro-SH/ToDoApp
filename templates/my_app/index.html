@@ -60,7 +60,7 @@
                             </div>
                         </div>
                         <div class="card-action">
-                            <button class="btn waves-effect waves-light" type="submit" name="action">Add
+                            <button class="btn waves-effect waves-light" type="submit" name="add">Add
                                 <i class="material-icons right">send</i>
                             </button>
                         </div>
@@ -82,7 +82,8 @@
                         <li class="collection-header"><h4>{{ category }}</h4></li>
                         {% for task in category.tasks_set.all %}
                                 <li class="collection-item">
-                                    <form action="delete_todo/{{task.id}}/" action="POST"></form>
+                                    <form action="delete_todo/{{task.id}}/" method="POST">
+                                        {% csrf_token %}
                                         <label>
                                             {% if task.is_done %}
                                                 <input type="checkbox" checked="checked" disabled="disabled">
@@ -91,7 +92,10 @@
                                             {% endif %}
                                             <span>{{ task }}<br>{{ task.deadline }}</span>
                                         </label>
-                                        <a class="btn-floating right"><i class="material-icons">delete_forever</i></a>
+                                    
+                                        <button class="waves-effect waves-light btn-floating right" type="submit" name="delete">
+                                            <i class="material-icons">delete_forever</i>
+                                        </button>
                                     </form>
                                 </li>
                         {% endfor %}

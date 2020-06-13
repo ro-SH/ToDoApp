@@ -47,3 +47,15 @@ def new_search(request):
         'tasks_list': tasks_list,
     }
     return render(request, 'my_app/new_search.html', context)
+
+def day(request):
+    date = request.POST.get('day_field')
+    tasks_list = []
+    for task in Tasks.objects.all():
+        if task.deadline.strftime(DATETIME_FORMAT).startswith(date):
+            tasks_list.append(task)
+    context = {
+        'date': date,
+        'tasks_list': tasks_list,
+    }
+    return render(request, 'my_app/day.html', context)

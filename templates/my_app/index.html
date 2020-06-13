@@ -8,9 +8,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "css/style.css" %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    
+    <!--Import Google Icon Font-->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">            
 </head>
+
 <body>
     <nav>
         <div class="container nav-wrapper">
@@ -27,6 +32,40 @@
         <div class="row">
             <div class="col s4">
                 <h4>ADD NEW TASK</h4>
+                <div class="card">
+                    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                    <form action="add_todo/" method="POST">
+                        {% csrf_token %}
+                        <div class="card-content">
+                            <div class="input-field">
+                                <select name="category">
+                                    <option value="" disabled selected>Choose category</option>
+                                    {% for category in category_list %}
+                                        <option value="{{ forloop.counter }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>Category</label>
+                            </div>
+                            <div class="input-field">
+                                <input id="to_do" type="text" class="validate" name="to_do">
+                                <label for="to_do">ToDo</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="text" class="datepicker" id="date" name="date">
+                                <label for="date">Date</label>
+                            </div>
+                            <div class="input-field">
+                                <input type="text" class="timepicker" id="time" name="time">
+                                <label for="time">Time</label>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <button class="btn waves-effect waves-light" type="submit" name="action">Add
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
             <div class="col s4">
                 <h4>SEARCH</42>
@@ -42,21 +81,19 @@
                     <ul class="collection with-header">
                         <li class="collection-header"><h4>{{ category }}</h4></li>
                         {% for task in category.tasks_set.all %}
-                            {% if task.is_done %}
                                 <li class="collection-item">
-                                <label>
-                                    <input type="checkbox" checked="checked" disabled="disabled" />
-                                    <span>{{ task }}{{ task.deadline }}</span>
-                                </label>
+                                    <form action="delete_todo/{{task.id}}/" action="POST"></form>
+                                        <label>
+                                            {% if task.is_done %}
+                                                <input type="checkbox" checked="checked" disabled="disabled">
+                                            {% else %}
+                                                <input type="checkbox" disabled="disabled">
+                                            {% endif %}
+                                            <span>{{ task }}<br>{{ task.deadline }}</span>
+                                        </label>
+                                        <a class="btn-floating right"><i class="material-icons">delete_forever</i></a>
+                                    </form>
                                 </li>
-                            {% else %}
-                                <li class="collection-item">
-                                    <label>
-                                        <input type="checkbox" disabled="disabled" />
-                                        <span>{{ task }} {{ task.deadline }}</span>
-                                    </label>
-                                </li>
-                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
@@ -64,6 +101,15 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.datepicker').datepicker();
+            $('.timepicker').timepicker();
+            $('select').formSelect();
+        });
+    </script>
 </body>
 </html>

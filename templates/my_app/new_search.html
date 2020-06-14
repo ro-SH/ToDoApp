@@ -2,45 +2,40 @@
 
 {% block content %}
 
-{% if tasks_list %}
+<h4>Results for '{{ search }}':</h4>
 
-    <h4>Results for '{{ search }}':</h4>
+<div class="row">
+    <table>
+        <thead>
+            <th>Category</th>
+            <th>ToDo</th>
+            <th>Time</th>
+            <th>Is Done</th>
+        </thead>
 
-    <div class="row">
-        <table>
-            <thead>
-                <th>Category</th>
-                <th>ToDo</th>
-                <th>Time</th>
-                <th>Is Done</th>
-            </thead>
-
-            <tbody>
-                {% for task in tasks_list %}
-                    <tr>
-                        <td>{{ task.category }}</td>
-                        <td>{{ task.title }}</td>
-                        <td>{{ task.deadline }}</td>
-                        <td>
-                            {% if task.is_done %}
-                                <label>
-                                    <input type="checkbox" checked="checked" disabled="disabled" />
-                                    <span></span>
-                                </label>
-                            {% else %}
-                                <label>
-                                    <input type="checkbox" disabled="disabled" />
-                                    <span></span>
-                                </label>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-{% else %}
-    <h4>No results for '{{ search }}'.</h4>
-{% endif %}
+        <tbody>
+            {% for task in tasks_list %}
+                <tr>
+                    <td>{{ task.category }}</td>
+                    <td>{{ task.title }}</td>
+                    <td>{{ task.deadline }}</td>
+                    <td>
+                        {% if task.is_done %}
+                            <label>
+                                <input type="checkbox" checked="checked" disabled="disabled" />
+                                <span></span>
+                            </label>
+                        {% else %}
+                            <label>
+                                <input type="checkbox" disabled="disabled" />
+                                <span></span>
+                            </label>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

@@ -1,39 +1,36 @@
 {% extends 'my_app/index.html' %}
 
 {% block content %}
-{% if tasks_list %}
-    <h4>ToDos on {{ date }}</h4>
 
-    <table>
-        <thead>
-            <th>Category</th>
-            <th>ToDo</th>
-            <th>Is Done</th>
-        </thead>
+<h4>ToDos on '{{ date }}'</h4>
 
-        <tbody>
-            {% for task in tasks_list %}
-                <tr>
-                    <td>{{ task.category }}</td>
-                    <td>{{ task.title }}</td>
-                    <td>
-                        {% if task.is_done %}
-                            <label>
-                                <input type="checkbox" checked="checked" disabled="disabled" />
-                                <span></span>
-                            </label>
-                        {% else %}
-                            <label>
-                                <input type="checkbox" disabled="disabled" />
-                                <span></span>
-                            </label>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <h4>Not ToDos on {{ date }}</h4>
-{% endif %}
+<table>
+    <thead>
+        <th>Category</th>
+        <th>ToDo</th>
+        <th>Is Done</th>
+    </thead>
+
+    <tbody>
+        {% for task in tasks_list %}
+            <tr>
+                <td>{{ task.category }}</td>
+                <td>{{ task.title }}</td>
+                <td>
+                    {% if task.is_done %}
+                        <label>
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                            <span></span>
+                        </label>
+                    {% else %}
+                        <label>
+                            <input type="checkbox" disabled="disabled" />
+                            <span></span>
+                        </label>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

@@ -27,7 +27,7 @@ def add_todo(request):
         context['error_message'] = "You did not select a category."
         return render(request, 'my_app/index.html', context)
     except ValueError:
-        context['error_message'] = "Incorrect date or time."
+        context['error_message'] = "Incorrect date or time format."
         return render(request, 'my_app/index.html', context)
     
     Tasks.objects.create(title=to_do, deadline=formatted_date, category=category, is_done=False)
@@ -42,6 +42,16 @@ def new_search(request):
     search = request.POST.get('search_field')
     tasks_list = Tasks.objects.filter(title__contains=search)
 
+    if not (tasks_list and search):
+        categories = Categories.objects.all()
+        context = {
+            'category_list': categories,
+            'error_message': 'Empty search field.'
+        }
+        if search:
+            context['error_message'] = 'No results for \'' + search + '\'.'
+        return render(request, 'my_app/index.html', context)
+
     context = {
         'search': search,
         'tasks_list': tasks_list,
@@ -49,11 +59,26 @@ def new_search(request):
     return render(request, 'my_app/new_search.html', context)
 
 def day(request):
+    categories = Categories.objects.all()
+    context = {
+        'category_list': categories,
+    }
     date = request.POST.get('day_field')
+    try:
+        datetime.strptime(date, DATETIME_FORMAT[:9])
+    except ValueError:
+        context['error_message'] = 'Incorrect date format.'
+        return render(request, 'my_app/index.html', context)
+    
     tasks_list = []
     for task in Tasks.objects.all():
         if task.deadline.strftime(DATETIME_FORMAT).startswith(date):
             tasks_list.append(task)
+
+    if not tasks_list:
+        context['error_message'] = 'Not ToDos on \'' + date + '\'.'
+        return render(request, 'my_app/index.html', context)
+
     context = {
         'date': date,
         'tasks_list': tasks_list,

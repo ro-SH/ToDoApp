@@ -36,6 +36,10 @@ def add_todo(request):
     
     Tasks.objects.create(title=to_do, deadline=formatted_date, category=category, is_done=False)
     return HttpResponseRedirect('/')
+    #context['category_scroll_to'] = category
+    #HttpResponseRedirect('/')
+    #return render(request, 'my_app/index.html', context)
+    
 
 def delete_category(request):
     category = request.POST.get('delete_category_list')
@@ -93,3 +97,8 @@ def day(request):
         'tasks_list': tasks_list,
     }
     return render(request, 'my_app/day.html', context)
+
+def save_changes(request):
+    for task in Tasks.objects.all():
+        print(request.POST.get())
+    return HttpResponseRedirect('/')

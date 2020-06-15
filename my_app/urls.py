@@ -10,4 +10,5 @@ urlpatterns = [
     path('delete_todo/<int:task_id>/', views.delete_todo, name='delete_todo'),
     path('new_search', views.new_search, name='new_search'),
     path('day', views.day, name='day'),
+    path('save_changes/', views.save_changes, name='save_changes'),
 ]

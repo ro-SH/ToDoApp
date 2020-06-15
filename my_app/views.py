@@ -11,6 +11,10 @@ def home(request):
     }
     return render(request, 'my_app/index.html', context)
 
+def add_category(request):
+    category = request.POST.get('category_field')
+    Categories.objects.create(title=category)
+    return HttpResponseRedirect('/')
 
 def add_todo(request):
     categories = Categories.objects.all()
@@ -18,7 +22,7 @@ def add_todo(request):
         'category_list': categories,
     }
     try:
-        category = Categories.objects.get(pk=request.POST.get('category'))
+        category = Categories.objects.get(title=request.POST.get('category'))
         to_do = request.POST.get('to_do')
         date = request.POST.get('date')
         time = request.POST.get('time')
@@ -33,6 +37,11 @@ def add_todo(request):
     Tasks.objects.create(title=to_do, deadline=formatted_date, category=category, is_done=False)
     return HttpResponseRedirect('/')
 
+def delete_category(request):
+    category = request.POST.get('delete_category_list')
+    Categories.objects.get(title=category).delete()
+
+    return HttpResponseRedirect('/')
 
 def delete_todo(request, task_id):
     Tasks.objects.get(id=task_id).delete()

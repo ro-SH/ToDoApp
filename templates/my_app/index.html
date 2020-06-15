@@ -20,6 +20,7 @@
     <nav>
         <div class="container nav-wrapper">
             <a href="/" class="brand-logo">ToDoApp</a>
+            <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right">
                 <li><a href="/">Home</a></li>
             </ul>
@@ -27,6 +28,78 @@
     </nav>
 
     <ul id="slide-out" class="sidenav collapsible">
+        <li>
+            <div class="collapsible-header"><i class="material-icons right">search</i>Search</div>
+            <div class="collapsible-body">
+                <form action="{% url 'my_app:new_search' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input id="search_field" type="text" class="validate" name="search_field">
+                                <label for="search_field">Search</label>
+                            </div>
+                        </div>
+                        <div class="col s6 offset-l3">
+                            <button class="btn-small waves-effect waves-light" type="submit" name="search">Search
+                                <i class="material-icons right">search</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        <li><div class="divider"></div></li>
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons right">visibility</i>Show by day</div>
+            <div class="collapsible-body">
+                <form action="{% url 'my_app:day' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input type="text" class="datepicker" name="day_field">
+                                <label for="day_field">Date</label>
+                            </div>
+                        </div>
+                        <div class="col s6 offset-l3">
+                            <button class="btn-small waves-effect waves-light" type="submit" name="show">Show
+                                <i class="material-icons right">visibility</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+        
+        <li><div class="divider"></div></li>
+
+        <li>
+            <div class="collapsible-header"><i class="material-icons right">add_circle</i>Add category</div>
+            <div class="collapsible-body">
+                <form action="{% url 'my_app:add_category' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col s12">
+                            <div class="input-field">
+                                <input id="category_field" type="text" class="validate" name="category_field">
+                                <label for="category_field">Category</label>
+                            </div>
+                        </div>
+                        <div class="col s6 offset-l3">
+                            <button class="btn-small waves-effect waves-light" type="submit" name="show">Add
+                                <i class="material-icons right">add_circle</i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </li>
+
+        <li><div class="divider"></div></li>
+
         <li>
             <div class="collapsible-header"><i class="material-icons right">add_circle</i>Add new task</div>
             <div class="collapsible-body">
@@ -38,7 +111,7 @@
                                 <select name="category">
                                     <option value="" disabled selected>Choose category</option>
                                     {% for category in category_list %}
-                                        <option value="{{ forloop.counter }}">{{ category }}</option>
+                                        <option value="{{ category }}">{{ category }}</option>
                                     {% endfor %}
                                 </select>
                                 <label>Category</label>
@@ -71,56 +144,48 @@
                 </form>
             </div>
         </li>
+
         <li><div class="divider"></div></li>
+
         <li>
-            <div class="collapsible-header"><i class="material-icons right">search</i>Search</div>
+            <div class="collapsible-header"><i class="material-icons right">delete_forever</i>Delete category</div>
             <div class="collapsible-body">
-                <form action="{% url 'my_app:new_search' %}" method="POST">
+                <form action="delete_category/" method="POST">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field">
-                                <input id="search_field" type="text" class="validate" name="search_field">
-                                <label for="search_field">Search</label>
+                                <select name="delete_category_list">
+                                    <option value="" disabled selected>Choose category</option>
+                                    {% for category in category_list %}
+                                        <option value="{{ category }}">{{ category }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>Category</label>
                             </div>
                         </div>
+                        
                         <div class="col s6 offset-l3">
-                            <button class="btn-small waves-effect waves-light" type="submit" name="search">Search
-                                <i class="material-icons right">search</i>
+                            <button class="btn-small waves-effect waves-light center" type="submit" name="delete_category_button">Delete
+                                <i class="material-icons right">delete_forever</i>
                             </button>
                         </div>
                     </div>
                 </form>
             </div>
         </li>
-        <li><div class="divider"></div></li>
-        <li>
-            <div class="collapsible-header"><i class="material-icons right">visibility</i>Show by day</div>
-            <div class="collapsible-body">
-                <form action="{% url 'my_app:day' %}" method="POST">
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col s12">
-                            <div class="input-field">
-                                <input type="text" class="datepicker" name="day_field">
-                                <label for="day_field">Date</label>
-                            </div>
-                        </div>
-                        <div class="col s6 offset-l3">
-                            <button class="btn-small waves-effect waves-light" type="submit" name="show">Show
-                                <i class="material-icons right">visibility</i>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </li>
+        
         <li><div class="divider"></div></li>
     </ul>
-    <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
 
+    <h3></h3>
+    
     <div class="container">
-        <h1>Simple ToDoApp with pretty design</h1>
+        <div class="row hide-on-med-and-down">
+            <div class="col l3">
+                <a class="sidenav-trigger waves-effect waves-light btn" data-target="slide-out"><i class="material-icons left">menu</i>Menu</a>
+            </div>
+        </div>
 
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
@@ -128,10 +193,11 @@
 
         <div class="row">
             {% for category in category_list %}
-                <div class="col s4">
+                <div class="col s12 m6 l4">
                     <ul class="collection with-header">
                         <li class="collection-header"><h4>{{ category }}</h4></li>
-                        {% for task in category.tasks_set.all %}
+                        {% if category.tasks_set.all %}
+                            {% for task in category.tasks_set.all %}
                                 <li class="collection-item">
                                     <form action="delete_todo/{{task.id}}/" method="POST">
                                         {% csrf_token %}
@@ -145,11 +211,14 @@
                                         </label>
                                     
                                         <button class="waves-effect waves-light btn-floating right" type="submit" name="delete">
-                                            <i class="material-icons">delete_forever</i>
+                                            <i class="material-icons red lighten-1">delete_forever</i>
                                         </button>
                                     </form>
                                 </li>
-                        {% endfor %}
+                            {% endfor %}
+                        {% else %}
+                            <li class="collection-item">Empty category.</li>
+                        {% endif %}
                     </ul>
                 </div>
             {% endfor %}

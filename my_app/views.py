@@ -3,13 +3,20 @@ from django.shortcuts import HttpResponseRedirect, render
 from .models import Categories, Tasks
 
 DATETIME_FORMAT = '%b %d, %Y %I:%M %p'
+EMPTY_CATEGORY_LIST_MSG = 'No current categories.'
+EMPTY_CATEGOTY_SELECTION_MSG = 'You did not select a category.'
+INCORRECT_DATETIME_FORMAT_MSG = 'Incorrect date or time format.'
+EMPTY_SEARCH_MSG = 'Empty search field.'
+INCORRECT_DATE_FORMAT = 'Incorrect date format.'
 
 def home(request):
     categories = Categories.objects.all()
     context = {
         'category_list': categories,
     }
-    return render(request, 'my_app/index.html', context)
+    if not categories:
+        context['error_message'] = EMPTY_CATEGORY_LIST_MSG
+    return render(request, 'my_app/home.html', context)
 
 def add_category(request):
     category = request.POST.get('category_field')
@@ -28,17 +35,17 @@ def add_todo(request):
         time = request.POST.get('time')
         formatted_date = datetime.strptime(date + ' ' + time, DATETIME_FORMAT)
     except (KeyError, Categories.DoesNotExist):
-        context['error_message'] = "You did not select a category."
-        return render(request, 'my_app/index.html', context)
+        context['error_message'] = EMPTY_CATEGOTY_SELECTION_MSG
+        return render(request, 'my_app/home.html', context)
     except ValueError:
-        context['error_message'] = "Incorrect date or time format."
-        return render(request, 'my_app/index.html', context)
+        context['error_message'] = INCORRECT_DATETIME_FORMAT_MSG
+        return render(request, 'my_app/home.html', context)
     
     Tasks.objects.create(title=to_do, deadline=formatted_date, category=category, is_done=False)
     return HttpResponseRedirect('/')
     #context['category_scroll_to'] = category
-    #HttpResponseRedirect('/')
-    #return render(request, 'my_app/index.html', context)
+    #HttpResponseRedirect('home/')
+    #return render(request, 'my_app/home.html', context)
     
 
 def delete_category(request):
@@ -59,11 +66,11 @@ def new_search(request):
         categories = Categories.objects.all()
         context = {
             'category_list': categories,
-            'error_message': 'Empty search field.'
+            'error_message': EMPTY_SEARCH_MSG,
         }
         if search:
             context['error_message'] = 'No results for \'' + search + '\'.'
-        return render(request, 'my_app/index.html', context)
+        return render(request, 'my_app/home.html', context)
 
     context = {
         'search': search,
@@ -80,8 +87,8 @@ def day(request):
     try:
         datetime.strptime(date, DATETIME_FORMAT[:9])
     except ValueError:
-        context['error_message'] = 'Incorrect date format.'
-        return render(request, 'my_app/index.html', context)
+        context['error_message'] = INCORRECT_DATE_FORMAT
+        return render(request, 'my_app/home.html', context)
     
     tasks_list = []
     for task in Tasks.objects.all():
@@ -90,7 +97,7 @@ def day(request):
 
     if not tasks_list:
         context['error_message'] = 'Not ToDos on \'' + date + '\'.'
-        return render(request, 'my_app/index.html', context)
+        return render(request, 'my_app/home.html', context)
 
     context = {
         'date': date,
@@ -100,5 +107,9 @@ def day(request):
 
 def save_changes(request):
     for task in Tasks.objects.all():
-        print(request.POST.get())
+        if request.POST.get(str(task.id) + '_check'):
+            task.is_done = True
+        else:
+            task.is_done = False
+        task.save()
     return HttpResponseRedirect('/')
